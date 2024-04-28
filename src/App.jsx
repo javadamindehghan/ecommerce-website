@@ -15,9 +15,9 @@ import {
   ThankYou,
   OrderHistory
 } from "./pages";
-import { landingLoader } from "./pages/Landing";
+
 import { singleProductLoader } from "./pages/SingleProduct";
-import { shopLoader } from "./pages/Shop";
+
 import { ToastContainer } from "react-toastify";
 import './index.css'
 
@@ -29,12 +29,12 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Landing />,
-        loader: landingLoader,
+       
       },
       {
         path: "shop",
         element: <Shop />,
-        loader: shopLoader
+      
 
       },
       {

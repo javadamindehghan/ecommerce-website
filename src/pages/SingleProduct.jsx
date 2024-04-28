@@ -21,13 +21,15 @@ import {
 } from "../features/wishlist/wishlistSlice";
 import { toast } from "react-toastify";
 import { store } from "../store";
+import dbJson from '../data/db.json'
 
 export const singleProductLoader = async ({ params }) => {
   const { id } = params;
+const product =  dbJson.products.filter(item=>item.id==id)[0]
 
-  const response = await axios(`http://localhost:8080/products/${id}`);
 
-  return { productData: response.data };
+
+   return { productData: product };
 };
 
 const SingleProduct = () => {
@@ -68,23 +70,25 @@ const SingleProduct = () => {
 
   const addToWishlistHandler = async (product) => {
     try {
-      const getResponse = await axios.get(
-        `http://localhost:8080/user/${localStorage.getItem("id")}`
-      );
+        const user = dbJson.user.filter(item=>item.id==localStorage.getItem("id"))[0]
+      // const getResponse = await axios.get(
+      //   `http://localhost:8080/user/${localStorage.getItem("id")}`
+      // );
       const userObj = getResponse.data;
 
-      
-      userObj.userWishlist = userObj.userWishlist || [];
-
-      userObj.userWishlist.push(product);
-
-      const postResponse = await axios.put(
-        `http://localhost:8080/user/${localStorage.getItem("id")}`,
-        userObj
-      );
 
       
-      store.dispatch(updateWishlist({ userObj }));
+      user.userWishlist = user[0].userWishlist || [];
+
+      user.userWishlist.push(product);
+
+      // const postResponse = await axios.put(
+      //   `http://localhost:8080/user/${localStorage.getItem("id")}`,
+      //   userObj
+      // );
+
+      
+      store.dispatch(updateWishlist({ user }));
       toast.success("Product added to the wishlist!");
     } catch (error) {
       console.error(error);

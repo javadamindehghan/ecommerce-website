@@ -19,6 +19,8 @@
     "@sl-codeblaster/react-3d-animated-card": "^1.0.8",
     "axios": "^1.6.0",
     "concurrently": "^8.2.2",
+    "dexie": "^4.0.4",
+    "dexie-react-hooks": "^1.1.7",
     "gh-pages": "^6.1.1",
     "html-react-parser": "^5.0.3",
     "nanoid": "^5.0.2",

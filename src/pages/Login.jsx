@@ -6,14 +6,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { store } from "../store";
 import { loginUser, logoutUser } from "../features/auth/authSlice";
 
+import { db } from "../db";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const loginState = useSelector((state) => state.auth.isLoggedIn);
 
+  const loginState = useSelector((state) => state.auth.isLoggedIn);
+  async function getDataFromTable(tableName) {
+    try {
+      const data = await db[tableName].toArray();
+      return data;
+    } catch (err) {
+      throw err;
+    }
+  }
   useEffect(() => {
+   
     if (loginState) {
       localStorage.clear();
       store.dispatch(logoutUser());
@@ -33,16 +43,19 @@ const Login = () => {
     return isProceed;
   };
 
-  const proceedLogin = (e) => {
+  const proceedLogin = async (e) => {
     e.preventDefault();
     if (isValidate()) {
-      fetch("http://localhost:8080/user")
-        .then((res) => res.json())
+    await getDataFromTable('friends')
         .then((res) => {
+          
           let data = res;
+       ;
           const foundUser = data.filter(
             (item) => item.email === email && item.password === password
           );
+         
+         
           if (foundUser[0]) {
             toast.success("Login successful");
             localStorage.setItem("id", foundUser[0].id);

@@ -14,18 +14,7 @@ const ThankYou = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const saveToOrderHistory = async () => {
-    try {
-      const response = await axios.post("http://localhost:8080/orders", {
-        userId: localStorage.getItem("id"),
-        orderStatus: "in progress",
-        subtotal: total,
-        cartItems: cartItems,
-      });
-    } catch (err) {
-      toast.error(err.response);
-    }
-  };
+
 
   if (cartItems.length > 0) {
     saveToOrderHistory();

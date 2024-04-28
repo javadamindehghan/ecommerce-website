@@ -4,8 +4,19 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { db } from "../db";
 
 const Profile = () => {
+ 
+  async function getDataFromTable(tableName, conditions) {
+    try {
+      const data = await db[tableName].filter(item=>item.id==conditions).toArray();
+     return data[0]
+    } catch (err) {
+      throw err;
+    }
+  }
+  
   const [id, setId] = useState(localStorage.getItem("id"));
   const [userData, setUserData] = useState({});
   const loginState = useSelector((state) => state.auth.isLoggedIn);
@@ -20,11 +31,14 @@ const Profile = () => {
     password: "",
   });
   const navigate = useNavigate();
-
+ 
+  const conditions = { id }
   const getUserData = async () => {
+    
     try {
-      const response = await axios(`http://localhost:8080/user/${id}`);
-      const data = response.data;
+      const data = await getDataFromTable('friends',conditions.id )
+     
+     
       setUserFormData({
         name: data.name,
         lastname: data.lastname,
@@ -47,35 +61,35 @@ const Profile = () => {
     }
   }, []);
 
-  const updateProfile = async (e) => {
-    e.preventDefault();
-    try{
+  // const updateProfile = async (e) => {
+  //   e.preventDefault();
+  //   try{
 
-      const getResponse = await axios(`http://localhost:8080/user/${id}`);
-      const userObj = getResponse.data;
+  //     const getResponse = await axios(`http://localhost:8080/user/${id}`);
+  //     const userObj = getResponse.data;
 
-      // saljemo get(default) request
-      const putResponse = await axios.put(`http://localhost:8080/user/${id}`, {
-        id: id,
-        name: userFormData.name,
-        lastname: userFormData.lastname,
-        email: userFormData.email,
-        phone: userFormData.phone,
-        adress: userFormData.adress,
-        password: userFormData.password,
-        userWishlist: await userObj.userWishlist
-        //userWishlist treba da stoji ovde kako bi sacuvao stanje liste zelja
-      });
-      const putData = putResponse.data;
-    }catch(error){
-      console.log(error.response);
-    }
-  }
+  //     // saljemo get(default) request
+  //     const putResponse = await axios.put(`http://localhost:8080/user/${id}`, {
+  //       id: id,
+  //       name: userFormData.name,
+  //       lastname: userFormData.lastname,
+  //       email: userFormData.email,
+  //       phone: userFormData.phone,
+  //       adress: userFormData.adress,
+  //       password: userFormData.password,
+  //       userWishlist: await userObj.userWishlist
+  //       //userWishlist treba da stoji ovde kako bi sacuvao stanje liste zelja
+  //     });
+  //     const putData = putResponse.data;
+  //   }catch(error){
+  //     console.log(error.response);
+  //   }
+  // }
 
   return (
     <>
       <SectionTitle title="پروفایل کاربر" path="خانه | پروفایل" />
-      <form className="max-w-7xl mx-auto text-center px-10" onSubmit={updateProfile}>
+      <form className="max-w-7xl mx-auto text-center px-10">
         <div className="grid grid-cols-3 max-lg:grid-cols-1">
           <div className="form-control w-full lg:max-w-xs">
             <label className="label">

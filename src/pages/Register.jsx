@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { SectionTitle } from "../components";
 import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
+import dbJson from '../data/db.json'
+import  {db}  from "../db";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -51,8 +53,19 @@ const Register = () => {
 
     return isProceed;
   };
+  async function addFriend(user) {
+    try {
+      // Add the new friend!
+        await db.friends.add(user);
+      toast.success("Registration Successful");
 
-  const handleSubmit = (e) => {
+   
+    } catch (error) {
+    toast.error("Registration err")
+    }
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     let regObj = {
@@ -67,18 +80,21 @@ const Register = () => {
     };
 
     if (isValidate()) {
-      fetch("http://localhost:8080/user", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(regObj),
-      })
-        .then((res) => {
-          toast.success("Registration Successful");
-          navigate("/login");
-        })
-        .catch((err) => {
-          toast.error("Failed: " + err.message);
-        });
+      
+     await addFriend(regObj)
+     
+      // fetch("http://localhost:8080/user", {
+      //   method: "POST",
+      //   headers: { "content-type": "application/json" },
+      //   body: JSON.stringify(regObj),
+      // })
+      //   .then((res) => {
+      //     toast.success("Registration Successful");
+      //     navigate("/login");
+      //   })
+      //   .catch((err) => {
+      //     toast.error("Failed: " + err.message);
+      //   });
     }
   };
   return (
